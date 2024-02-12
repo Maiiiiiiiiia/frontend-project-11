@@ -13,7 +13,9 @@ export default {
       invalidUrl: 'The link must be a valid URL',
       invalidRss: 'The resource does not contain valid RSS',
       duplicate: 'RSS already exists',
-      networkError: 'Network error',
+      axiosError: 'Network error',
+      empty: 'Must be not empty',
+
     },
   },
 };
