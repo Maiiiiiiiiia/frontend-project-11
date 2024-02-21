@@ -55,18 +55,23 @@ const createContainerPost = (response, value) => {
       const ul = document.createElement('ul');
       ul.setAttribute('class', 'list-group border-0 rounded-0');
       divCardBorder.append(ul);
-      datas.forEach(({ title }) => {
+      datas.forEach((item) => {
         // console.log(title);
+        const { title } = item;
+        const { href } = item;
+        const { description } = item;
+        const { id } = item;
         const li = document.createElement('li');
         li.setAttribute('class', 'list-group-item d-flex justify-content-between align-items-start border-0 border-end-0');
         ul.append(li);
         const aLi = document.createElement('a');
-        aLi.setAttribute('href', `${title}`);
+        aLi.setAttribute('href', `${href}`);
         aLi.classList.add('fw-bold');
         aLi.setAttribute('data-id', '12');
         aLi.setAttribute('target', '_blank');
         aLi.setAttribute('rel', 'noopener noreferrer');
-        aLi.textContent = (title);
+        aLi.textContent = title;
+
         const buttonLi = document.createElement('button');
         buttonLi.setAttribute('type', 'button');
         buttonLi.classList.add('btn', 'btn-outline-primary', 'btn-sm');
@@ -75,6 +80,15 @@ const createContainerPost = (response, value) => {
         buttonLi.setAttribute('data-bs-target', '#modal');
         buttonLi.textContent = i18nInstance.t('buttons.view');
         li.append(aLi, buttonLi);
+
+        buttonLi.addEventListener('click', (e) => {
+          e.preventDefault();
+          aLi.classList.remove('fw-bold');
+          aLi.classList.add('fw-normal', 'link-secondary');
+          document.querySelector('.modal-header > h5').textContent = title;
+          document.querySelector('.modal-content > .modal-body').textContent = description;
+          document.querySelector('.modal-footer > a').setAttribute('href', href);
+        })
       });
     } else {
       const ulPosts = document.querySelector('.posts > .card > .list-group');
