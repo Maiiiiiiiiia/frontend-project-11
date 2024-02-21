@@ -26,6 +26,15 @@ const app = () => {
     state.link = url;
     watchedState.form.formState = 'filling';
   });
+
+  const updater = () => {
+    setTimeout(() => {
+      watchedState.form.formState = 'update';
+      updater();
+    }, 5000);
+  };
+  updater();
 };
+
 
 export default app;
