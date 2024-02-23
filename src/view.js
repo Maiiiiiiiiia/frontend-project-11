@@ -90,11 +90,13 @@ const createContainerPost = (response, value) => {
     } else {
       const { mainTitle } = data;
       const { mainDescription } = data;
-
+      // console.log('else');
       const li = document.createElement('li');
-      const ulPosts = document.querySelector('.posts > .card > .list-group');
-      li.setAttribute('class', 'list-group-item d-flex justify-content-between align-items-start border-0 border-end-0');
-      ulPosts.prepend(li);
+      const ulFeeds = document.querySelector('.feeds > .card > .list-group');
+
+      li.classList.add('list-group-item', 'border-0', 'border-end-0');
+      ulFeeds.prepend(li);
+
       const mainH = document.createElement('h3');
       mainH.classList.add('h6', 'm-0');
       mainH.textContent = mainTitle;
