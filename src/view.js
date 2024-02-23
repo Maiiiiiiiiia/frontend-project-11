@@ -13,7 +13,7 @@ gettingInstance.init({
   resources,
 });
 
-const validateUrl = (url, validLinks, i18nInstance) => {
+const validateUrl = (url, validLinks) => {
   Yup.setLocale({
     mixed: {
       notOneOf: i18nInstance.t('feedback.duplicate'),
@@ -151,7 +151,6 @@ const createContainerPost = (response, value) => {
 
 const feedback = document.querySelector('.feedback');
 const inputText = document.querySelector('#url-input');
-// const form = document.querySelector('.rss-form');
 const sendButton = document.querySelector('[type="submit"]');
 
 const render = (value, state) => {

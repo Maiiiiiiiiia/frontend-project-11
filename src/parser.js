@@ -20,6 +20,7 @@ const parser = (response) => {
       title, description, href, id,
     });
   });
+  // console.log(data.posts);
   return data;
 };
 export default parser;

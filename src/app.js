@@ -31,7 +31,7 @@ const app = () => {
     setTimeout(() => {
       watchedState.form.formState = 'update';
       updater();
-    }, 500000000000);
+    }, 5000);
   };
   updater();
 };
