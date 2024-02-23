@@ -195,7 +195,8 @@ const render = (value, state) => {
         feedback.classList.add('text-danger');
         const error = `${err}`;
         if (err instanceof AxiosError) {
-          feedback.textContent = i18nInstance('feedback.axiosError');
+          feedback.textContent = i18nInstance.t('feedback.axiosError');
+          console.log('error');
         } else if (error.includes('ValidationError: ')) {
           const [, result] = error.split('ValidationError: ');
           feedback.textContent = result;
