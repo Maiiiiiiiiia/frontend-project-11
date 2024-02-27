@@ -4,7 +4,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/978d5026aff4c5af7f2e/maintainability)](https://codeclimate.com/github/Maiiiiiiiiia/frontend-project-11/maintainability)
 
 Versel:
-https://frontend-project-11-m7oaan1ne-maykulievas-projects.vercel.app/
+https://frontend-project-11-maykulievas-projects.vercel.app/
 
 ### Description:
 Rss Reader is a service for aggregating RSS feeds, which makes it convenient to read a variety of sources, for example, blogs. It allows you to add an unlimited number of RSS feeds, updates them itself and adds new entries to the general feed.

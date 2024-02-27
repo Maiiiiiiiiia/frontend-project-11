@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import onChange from 'on-change';
 import render from './view';
 
