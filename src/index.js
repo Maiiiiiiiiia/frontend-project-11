@@ -2,6 +2,6 @@
 
 import './styles.scss';
 import 'bootstrap';
-import app from './app';
+import controller from './controller';
 
-app();
+controller();

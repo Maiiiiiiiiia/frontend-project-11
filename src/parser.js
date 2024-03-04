@@ -7,7 +7,6 @@ const parser = (response) => {
     return null;
   }
   const items = doc.querySelectorAll('item');
-  // console.log(items);
   const mainTitle = doc.querySelector('channel > title').textContent;
   const mainDescription = doc.querySelector('channel > description').textContent;
   const data = { mainTitle, mainDescription, posts: [] };
@@ -20,7 +19,6 @@ const parser = (response) => {
       title, description, href, id,
     });
   });
-  // console.log(data.posts);
   return data;
 };
 export default parser;
