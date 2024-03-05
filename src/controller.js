@@ -54,8 +54,12 @@ const app = () => {
         e.target.classList.add('fw-normal', 'link-secondary');
         e.target.setAttribute('href', href);
       } else if (e.target.tagName === 'BUTTON') {
+        // e.target.classList.remove('fw-bold');
         e.target.classList.remove('fw-bold');
         e.target.classList.add('fw-normal', 'link-secondary');
+        const link = document.querySelector('.list-group-item > a');
+        link.classList.remove('fw-bold');
+        link.classList.add('fw-normal', 'link-secondary')
         document.querySelector('.modal-header > h5').textContent = title;
         document.querySelector('.modal-content > .modal-body').textContent = description;
         document.querySelector('.modal-footer > a').setAttribute('href', href);
