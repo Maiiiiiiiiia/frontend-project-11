@@ -41,11 +41,11 @@ const app = () => {
   const postsContainer = document.querySelector('.posts');
   postsContainer.addEventListener('click', (e) => {
     // e.preventDefault();
-    const content = state.content;
+    const datas = state.content;
     // let items;
-    const data = content[content.length - 1];
+    const data = datas[datas.length - 1];
     const items = data.posts;
-    items.map((item) => {
+    items.forEach((item) => {
       const { title } = item;
       const { description } = item;
       const { href } = item;
@@ -59,7 +59,7 @@ const app = () => {
         e.target.classList.add('fw-normal', 'link-secondary');
         const link = document.querySelector('.list-group-item > a');
         link.classList.remove('fw-bold');
-        link.classList.add('fw-normal', 'link-secondary')
+        link.classList.add('fw-normal', 'link-secondary');
         document.querySelector('.modal-header > h5').textContent = title;
         document.querySelector('.modal-content > .modal-body').textContent = description;
         document.querySelector('.modal-footer > a').setAttribute('href', href);
