@@ -32,7 +32,7 @@ const render = (value, state, i18n) => {
         }
         feedback.classList.add('text-success');
         feedback.textContent = i18n('feedback.success');
-        createContainerPost(state.content, value, i18n);
+        createContainerPost(state.content, value, i18n, state.button);
         inputText.value = '';
         inputText.focus();
         sendButton.removeAttribute('disabled');
@@ -62,7 +62,7 @@ const render = (value, state, i18n) => {
             const data = parser(response);
             const difference = builtUpdate(data, state.content);
             if (difference.length !== 0) {
-              createContainerPost(difference, value, i18n);
+              createContainerPost(difference, value, i18n, state.button);
               const mainContent = state.content.filter((item) => item.mainTitle === data.mainTitle);
               difference.map((post) => mainContent[0].posts.push(post));
             }
