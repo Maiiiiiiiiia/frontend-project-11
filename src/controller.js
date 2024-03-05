@@ -44,7 +44,7 @@ const app = () => {
     const content = state.content;
     // let items;
     const data = content[content.length - 1];
-    const items = data.posts.reverse();
+    const items = data.posts;
     items.map((item) => {
       const { title } = item;
       const { description } = item;
