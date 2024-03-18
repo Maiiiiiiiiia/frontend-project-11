@@ -3,10 +3,6 @@ import uniqueId from 'lodash/uniqueId';
 const parser = (response) => {
   const pars = new DOMParser();
   const doc = pars.parseFromString(response.data.contents, 'text/xml');
-  // const paragraph = doc.querySelector('p.text-danger');
-  // if (paragraph) {
-  //   return i18n('feedback.invalidRss');
-  // }
   if (!doc.querySelector('rss')) {
     return null;
   }

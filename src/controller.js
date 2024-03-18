@@ -5,6 +5,8 @@ import render from './render';
 import resources from './locales/index';
 import validateUrl from './validateUrl';
 import parser from './parser';
+import renderClick from './renderClick';
+import builtUpdate from './builtUpdate';
 // import checkNewPost from './checkNewPost';
 
 // const updater = () => {
@@ -38,7 +40,10 @@ const app = () => {
     const watchedState = onChange(state, (path, value) => {
       switch (path) {
         case 'form.formState':
-          render(state, i18nInstance.t);
+          render(state, value, i18nInstance.t);
+          break;
+        case 'button':
+          renderClick(state);
           break;
         default:
           break;
@@ -54,6 +59,7 @@ const app = () => {
       validateUrl(state.link, state.validLinks, i18nInstance.t)
         .then(() => {
           watchedState.form.formState = 'loading';
+          // console.log('loading');
         })
         .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(state.link)}`))
         .then((response) => {
@@ -67,11 +73,33 @@ const app = () => {
         .then(() => {
           state.validLinks.push(state.link);
         })
+//         .then(() => {
+//           if (state.validLinks.length !== 0) {
+//             state.validLinks.map((link) => {
+//               axios
+//               .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
+//               .then((response) => {
+//                 const data = parser(response);
+//                 const difference = builtUpdate(data, state.content);
+//                 console.log(difference);
+// // watchedState.content.push(difference);
+//                 // if (difference.length !== 0) {
+//                 //   createContainerPost(difference, i18n, value);
+//                 //   const mainContent = state.content.filter((item) => item.mainTitle === data.mainTitle);
+//                 //   difference.map((post) => mainContent[0].posts.push(post));
+//                 // }
+//                 setTimeout(() => watchedState.content.push(difference), 5000);
+//               })
+//               .catch(() => {});
+//               return null;
+//             });
+//             // setTimeout(() => watchedState.content.push(difference), 5000);
+//           }
+//         })
         .then(() => {
           // updater();
           // checkNewPost(watchedState, i18nInstance);
           watchedState.form.formState = 'update';
-          console.log('watchedState.form.formState = update');
         })
         .catch((err) => {
           watchedState.errorMessage = err;
@@ -79,12 +107,6 @@ const app = () => {
             watchedState.form.formState = 'error';
           }
         });
-      // .finally(() => {
-      //   updater();
-      //   watchedState.form.formState = 'update';
-      //   console.log('updater work');
-      // });
-      //
     });
 
     const postsContainer = document.querySelector('.posts');
@@ -92,9 +114,10 @@ const app = () => {
       if (e.target.tagName === 'A') {
         console.log('controiier click a'); // при нажатии на <а> работает
         watchedState.button = 'a';
+        // console.log(state.button);
       } else if (e.target.tagName === 'BUTTON') {
-        console.log('controiier click BUTTON');
-        // watchedState.button = 'button';
+        // console.log('link click in controiier');
+        watchedState.button = 'button';
       }
     });
   });
