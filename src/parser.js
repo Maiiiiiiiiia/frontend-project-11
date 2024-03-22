@@ -1,11 +1,12 @@
 import uniqueId from 'lodash/uniqueId';
 
-const parser = (response) => {
+const parser = (response, i18n) => {
   const pars = new DOMParser();
   const doc = pars.parseFromString(response.data.contents, 'text/xml');
   if (!doc.querySelector('rss')) {
-    return null;
+    throw i18n('feedback.invalidRss');
   }
+
   const items = doc.querySelectorAll('item');
   const mainTitle = doc.querySelector('channel > title').textContent;
   const mainDescription = doc.querySelector('channel > description').textContent;
