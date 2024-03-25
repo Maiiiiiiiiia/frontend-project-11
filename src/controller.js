@@ -36,7 +36,7 @@ const app = () => {
           } else if (value === 'filling') {
             renderFilling(state, i18nInstance.t, state.form.formState);
           } else if (value === 'error') {
-            renderError(state.errorMessage);
+            renderError(state.errorMessage, i18nInstance.t);
           } else if (value === 'update') {
             checkNewPost(state);
           }
@@ -85,9 +85,6 @@ const app = () => {
         .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(state.links)}`))
         .then((response) => {
           const data = parser(response, i18nInstance.t);
-          if (data === null) {
-          return;
-          }
           watchedState.content.push(data);
           watchedState.form.formState = 'filling';
           console.log('filling');
@@ -95,15 +92,24 @@ const app = () => {
         })
         .then(() => {
           watchedState.validLinks.push(state.links);
-        })
-        .then(() => {
           watchedState.form.formState = 'update';
         })
+
         .catch((err) => {
-          watchedState.errorMessage = err;
-          // if (err) {
-            watchedState.form.formState = 'error';
-          // }
+          if (err.message === i18nInstance.t('feedback.invalidUrl')) {
+            watchedState.errorMessage = i18nInstance.t('feedback.invalidUrl');
+          } else if (err.message === i18nInstance.t('feedback.duplicate')) {
+            watchedState.errorMessage = i18nInstance.t('feedback.duplicate');
+          } else if (err.message === i18nInstance.t('feedback.empty')) {
+            watchedState.errorMessage = i18nInstance.t('feedback.empty');
+          } else if (err.message === i18nInstance.t('feedback.axiosError')) {
+            watchedState.errorMessage = i18nInstance.t('feedback.axiosError');
+          } else if (err.message === i18nInstance.t('feedback.invalidRss')) {
+            watchedState.errorMessage = i18nInstance.t('feedback.invalidRss');
+          } else {
+            watchedState.errorMessage = i18nInstance.t('feedback.unknownError');
+          }
+          watchedState.form.formState = 'error';
         });
     });
 

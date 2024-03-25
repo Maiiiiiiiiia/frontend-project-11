@@ -9,9 +9,7 @@ const parser = (response, i18n) => {
   const pars = new DOMParser();
   const doc = pars.parseFromString(response.data.contents, 'text/xml');
   if (!doc.querySelector('rss')) {
-    const errorMessage = i18n('feedback.invalidRss');
-    renderError(new Error(errorMessage)); // Error: Ресурс не содержит валидный RSS
-    return null;
+    throw new Error(i18n('feedback.invalidRss'));
   }
 
     const items = doc.querySelectorAll('item');
