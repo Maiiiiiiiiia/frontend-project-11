@@ -95,15 +95,17 @@ export const renderFilling = (state, i18n, value) => {
   sendButton.removeAttribute('disabled');
 };
 
-export const renderError = (state) => {
+export const renderError = (errorText) => { // Error: Ресурс не содержит валидный RSS
+  console.log(errorText);
   sendButton.removeAttribute('disabled');
   if (!inputText.classList.contains('is-invalid')) {
     inputText.classList.add('is-invalid');
   }
   feedback.classList.add('text-danger');
-  const errorKey = `${state.errorMessage}`;
+  const errorKey = `${errorText}`;
   if (errorKey) {
-    const [, result] = errorKey.split('ValidationError: ');
+    const [, result] = errorKey.split(': ');
+
     feedback.textContent = result;
   }
 };
