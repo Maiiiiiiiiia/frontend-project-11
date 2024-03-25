@@ -5,7 +5,7 @@ import resources from './locales/index';
 import validateUrl from './validateUrl';
 import parser from './parser';
 import {
-  createContainerFilling, createContainerUpdate, renderLoading, renderFilling, renderError, renderClick,
+  createContainerPost, renderLoading, renderFilling, renderError, renderClick,
 } from './render';
 import builtUpdate from './builtUpdate';
 
@@ -19,34 +19,8 @@ const app = () => {
     content: [],
     errorMessage: '',
     clickedLinks: [],
-    con: [],
+    difference: [],
   };
-
-  // const checkNewPost = (watchedState) => {
-  //   watchedState.validLinks.map((link) => {
-  //     axios
-  //       .get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
-  //       .then((response) => {
-  //         const data = parser(response);
-  //         const difference = builtUpdate(data, watchedState.content);
-  //         if (difference.length !== 0) {
-  //           const mainContent = watchedState.content.filter((item) => item.mainTitle === data.mainTitle);
-  //           difference.map((post) => mainContent[0].posts.push(post));
-  //           // console.log(watchedState.content)
-  //           watchedState.content.push(difference);
-  //           // console.log(watchedState.content)
-
-  // mainContent[0].posts.push(...difference);
-
-
-  //         }
-  //       })
-  //       .catch(() => {});
-  //     return null;
-  //   });
-  //   setTimeout(() => checkNewPost(watchedState), 5000);
-  //           console.log('setTimeout');
-  // };
 
   const i18nInstance = i18next.createInstance();
   i18nInstance.init({
@@ -60,24 +34,16 @@ const app = () => {
           if (value === 'loading') {
             renderLoading();
           } else if (value === 'filling') {
-            renderFilling(state, i18nInstance.t, value);
+            renderFilling(state, i18nInstance.t, state.form.formState);
           } else if (value === 'error') {
             renderError(state, i18nInstance.t);
           } else if (value === 'update') {
-            checkNewPost(state, i18nInstance.t, value);
+            checkNewPost(state);
           }
           break;
-        };
-        case 'content': 
-            createContainerUpdate(state.content, i18nInstance.t) // контент не обновляется!!!
-          //   createContainerFilling(state.content, i18nInstance.t)
-          // } else if (value === 'update') {
-          //   console.log('content case work - update');
-          //   createContainerUpdate(state.content, i18nInstance.t)
-          // }
-        // }
-            // createContainerPost(state.content, i18nInstance.t);
-            // console.log(path); // content
+        }
+        case 'difference':
+          createContainerPost(value, i18nInstance.t, state.form.formState);
           break;
         case 'clickedLinks':
           renderClick(state);
@@ -87,34 +53,24 @@ const app = () => {
       }
     });
 
-const checkNewPost = (watchedState) => {
-  const promises = watchedState.validLinks.map((link) => {
-    axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
-      .then((response) => {
-        const data = parser(response);
-        const difference = builtUpdate(data, watchedState.content);
-        if (difference.length !== 0) {
+    const checkNewPost = (newState) => {
+      const promises = newState.validLinks.map((link) => {
+        axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
+          .then((response) => {
+            const data = parser(response);
+            const difference = builtUpdate(data, newState.content);
+            if (difference.length !== 0) {
+              newState.difference.push(difference);
+            }
+          })
+          .catch(() => {});
+      });
+      Promise.all(promises)
+        .then(() => {
+          setTimeout(() => checkNewPost(watchedState), 5000);
+        });
+    };
 
-            const mainContent = watchedState.content.filter((item) => item.mainTitle === data.mainTitle);
-            difference.forEach((post) => mainContent[0].posts.push(post));
-            
-            // watchedState.content = mainContent.posts.push(...difference);
-            mainContent[0].posts.push(...difference);
-        }
-            // watchedState.content.push(difference);
-
-      })
-      .catch(() => {});
-  });
-  Promise.all(promises)
-    .then(() => {
-      setTimeout(() => checkNewPost(watchedState), 5000);
-      console.log('setTimeout');
-    });
-};
-
-
-    
     const form = document.querySelector('.rss-form');
     form.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -128,7 +84,6 @@ const checkNewPost = (watchedState) => {
         .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(state.links)}`))
         .then((response) => {
           const data = parser(response, i18nInstance.t);
-          // console.log(data);
           watchedState.content.push(data);
           watchedState.form.formState = 'filling';
         })
