@@ -36,7 +36,7 @@ const app = () => {
           } else if (value === 'filling') {
             renderFilling(state, i18nInstance.t, state.form.formState);
           } else if (value === 'error') {
-            renderError(state.errorMessage, i18nInstance.t);
+            renderError(state.errorMessage);
           } else if (value === 'update') {
             checkNewPost(state);
           }
@@ -80,15 +80,12 @@ const app = () => {
       validateUrl(state.links, state.validLinks, i18nInstance.t)
         .then(() => {
           watchedState.form.formState = 'loading';
-          console.log('loading');
         })
         .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(state.links)}`))
         .then((response) => {
           const data = parser(response, i18nInstance.t);
           watchedState.content.push(data);
           watchedState.form.formState = 'filling';
-          console.log('filling');
-
         })
         .then(() => {
           watchedState.validLinks.push(state.links);
@@ -107,7 +104,7 @@ const app = () => {
           } else if (err.message === i18nInstance.t('feedback.invalidRss')) {
             watchedState.errorMessage = i18nInstance.t('feedback.invalidRss');
           } else {
-            watchedState.errorMessage = i18nInstance.t('feedback.unknownError');
+            watchedState.errorMessage = i18nInstance.t('feedback.axiosError');
           }
           watchedState.form.formState = 'error';
         });

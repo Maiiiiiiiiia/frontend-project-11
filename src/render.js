@@ -1,5 +1,3 @@
-import { AxiosError } from "axios";
-
 const feedback = document.querySelector('.feedback');
 const inputText = document.querySelector('#url-input');
 const sendButton = document.querySelector('[type="submit"]');
@@ -97,8 +95,7 @@ export const renderFilling = (state, i18n, value) => {
   sendButton.removeAttribute('disabled');
 };
 
-export const renderError = (errorText, i18n) => { // Error: Ресурс не содержит валидный RSS
-  console.log(errorText);
+export const renderError = (errorText) => {
   sendButton.removeAttribute('disabled');
   if (!inputText.classList.contains('is-invalid')) {
     inputText.classList.add('is-invalid');
@@ -107,7 +104,6 @@ export const renderError = (errorText, i18n) => { // Error: Ресурс не с
   const errorKey = `${errorText}`;
 
   if (errorKey) {
-    // const [, result] = errorKey.split(': ');
     feedback.textContent = errorKey;
   }
 };
