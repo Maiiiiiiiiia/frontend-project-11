@@ -28,18 +28,34 @@ const app = () => {
     debug: false,
     resources,
   }).then(() => {
+    // const checkNewPost = (newState) => {
+    //   const promises = newState.validLinks.map((link) => {
+    //     return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
+    //       .then((response) => {
+    //         const data = parser(response);
+    //         const difference = builtUpdate(data, newState.content);
+    //         if (difference.length !== 0) {
+    //           newState.difference.push(difference);
+    //         }
+    //       })
+    //       .catch(() => {});
+    //   });
+    //   return Promise.all(promises)
+    //     .then(() => {
+    //       setTimeout(() => checkNewPost(newState), 5000);
+    //     });
+    // };
+
     const checkNewPost = (newState) => {
-      const promises = newState.validLinks.map((link) => {
-        return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
-          .then((response) => {
-            const data = parser(response);
-            const difference = builtUpdate(data, newState.content);
-            if (difference.length !== 0) {
-              newState.difference.push(difference);
-            }
-          })
-          .catch(() => {});
-      });
+      const promises = newState.validLinks.map((link) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
+        .then((response) => {
+          const data = parser(response);
+          const difference = builtUpdate(data, newState.content);
+          if (difference.length !== 0) {
+            newState.difference.push(difference);
+          }
+        })
+        .catch(() => {}));
       return Promise.all(promises)
         .then(() => {
           setTimeout(() => checkNewPost(newState), 5000);
