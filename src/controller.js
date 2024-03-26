@@ -28,6 +28,24 @@ const app = () => {
     debug: false,
     resources,
   }).then(() => {
+    const checkNewPost = (newState) => {
+      const promises = newState.validLinks.map((link) => {
+        return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
+          .then((response) => {
+            const data = parser(response);
+            const difference = builtUpdate(data, newState.content);
+            if (difference.length !== 0) {
+              newState.difference.push(difference);
+            }
+          })
+          .catch(() => {});
+      });
+      return Promise.all(promises)
+        .then(() => {
+          setTimeout(() => checkNewPost(newState), 5000);
+        });
+    };
+
     const watchedState = onChange(state, (path, value) => {
       switch (path) {
         case 'form.formState': {
@@ -52,24 +70,6 @@ const app = () => {
           break;
       }
     });
-
-    const checkNewPost = (newState) => {
-      const promises = newState.validLinks.map((link) => {
-        axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(link)}`)
-          .then((response) => {
-            const data = parser(response);
-            const difference = builtUpdate(data, newState.content);
-            if (difference.length !== 0) {
-              newState.difference.push(difference);
-            }
-          })
-          .catch(() => {});
-      });
-      Promise.all(promises)
-        .then(() => {
-          setTimeout(() => checkNewPost(watchedState), 5000);
-        });
-    };
 
     const form = document.querySelector('.rss-form');
     form.addEventListener('submit', (e) => {

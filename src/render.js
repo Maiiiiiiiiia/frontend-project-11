@@ -77,6 +77,7 @@ export const createContainerPost = (response, i18n, value) => {
     ulPost.prepend(li);
     return null;
   });
+  return null;
 };
 
 export const renderFilling = (state, i18n, value) => {
