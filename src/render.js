@@ -7,9 +7,9 @@ const createAndAppendElement = (parent, elementType, classes, content, attribute
     element.textContent = content;
   }
   if (attributes) {
-    for (const [key, value] of Object.entries(attributes)) {
+    Object.entries(attributes).forEach(([key, value]) => {
       element.setAttribute(key, value);
-    }
+    });
   }
   parent.append(element);
   return element;
@@ -24,9 +24,6 @@ export const renderLoading = () => {
 };
 
 export const createContainerPosts = (response, i18n, value) => {
-  console.log(response);
-  console.log(value);
-
   let items;
   if (value === 'loading') {
     renderLoading();
@@ -34,11 +31,8 @@ export const createContainerPosts = (response, i18n, value) => {
   }
   if (value === 'filling') {
     const data = response[response.length - 1];
-    items = [...data.posts].reverse(); // (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-
-    console.log(data); 
+    items = [...data.posts].reverse();
     const postsContainer = document.querySelector('.posts');
-
     if (!postsContainer.hasChildNodes()) {
       const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
       const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
@@ -53,7 +47,6 @@ export const createContainerPosts = (response, i18n, value) => {
       createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
       createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
     }
-
   }
   if (value === 'update') {
     items = response[response.length - 1].reverse();
@@ -62,14 +55,14 @@ export const createContainerPosts = (response, i18n, value) => {
   items.forEach((item) => {
     const { title, href, id } = item;
     const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
-    const a = createAndAppendElement(li, 'a', ['fw-bold'], title, {
-      'href': href,
+    createAndAppendElement(li, 'a', ['fw-bold'], title, {
+      href,
       'data-id': id,
-      'target': '_blank',
-      'rel': 'noopener noreferrer',
+      target: '_blank',
+      rel: 'noopener noreferrer',
     });
-    const button = createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
-      'type': 'button',
+    createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
+      type: 'button',
       'data-id': id,
       'data-bs-toggle': 'modal',
       'data-bs-target': '#modal',
@@ -130,9 +123,8 @@ export const renderError = (errorText) => {
   }
   feedback.classList.add('text-danger');
   const errorKey = `${errorText}`;
-
   if (errorKey) {
-    feedback.textContent = errorKey;
+    feedback.textContent = errorText;
   }
 };
 

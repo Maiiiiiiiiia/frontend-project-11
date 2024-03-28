@@ -33,12 +33,10 @@ const app = () => {
     resources,
   }).then(() => {
     const checkNewPost = (newState) => {
-      console.log('checkNewPost');
       const promises = newState.validLinks.map((link) => axios.get(`${allOriginsUrl}${encodeURIComponent(link)}`)
         .then((response) => {
           const data = parser(response);
           const difference = builtUpdate(data, newState.posts);
-          console.log(difference);
           if (difference.length !== 0) {
             watchedState.posts.push(difference);
           }
@@ -58,7 +56,7 @@ const app = () => {
           } else if (value === 'filling') {
             renderFilling(state, i18nInstance.t, state.form.formState);
           } else if (value === 'error') {
-            renderError(state.errorMessage);
+            renderError(state.errorMessage, i18nInstance.t);
           } else if (value === 'update') {
             checkNewPost(state);
           }
@@ -101,8 +99,6 @@ const app = () => {
         .then(() => axios.get(`${allOriginsUrl}${encodeURIComponent(url)}`))
         .then((response) => {
           const data = parser(response, i18nInstance.t);
-          // console.log(data.posts); // (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-          // const { mainDescription, mainTitle, posts } = feeds;
           watchedState.feeds.push(data);
           watchedState.posts.push(data);
 
@@ -113,10 +109,11 @@ const app = () => {
           watchedState.form.formState = 'update';
         })
         .catch((err) => {
-          console.log(err);
-          watchedState.errorMessage = err.message === i18nInstance.t('feedback.axiosError')
-            ? i18nInstance.t('feedback.axiosError')
-            : err.message;
+          if (err.message === 'Network Error') {
+            watchedState.errorMessage = i18nInstance.t('feedback.axiosError');
+          } else {
+            watchedState.errorMessage = err.message;
+          }
           watchedState.form.formState = 'error';
         });
     });
