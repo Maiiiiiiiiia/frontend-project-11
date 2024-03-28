@@ -135,7 +135,7 @@ export const renderClick = (state) => {
     postElement.classList.add('fw-normal', 'link-secondary');
     postElement.classList.remove('fw-bold');
   });
-  const response = state.content;
+  const response = state.posts;
   const data = response[response.length - 1];
   const items = data.posts;
   items.forEach((item) => {
