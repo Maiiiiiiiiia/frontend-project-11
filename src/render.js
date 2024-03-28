@@ -23,45 +23,41 @@ export const renderLoading = () => {
   feedback.textContent = '';
 };
 
-// export const createContainerLoading = (response, i18n, value) => {
-//   let items;
-//   if (value === 'loading') {
-//     renderLoading();
-//     return;
-//   }
-//   return null;
-// };
+export const createContainerPosts = (response, i18n, value) => {
+  console.log(response);
+  console.log(value);
 
-export const createContainerPosts = (response, i18n) => {
-  console.log('createContainer Posts');
-  // let items;
-    const items = response[response.length - 1];
-    // items = [...data.posts].reverse();
+  let items;
+  if (value === 'loading') {
+    renderLoading();
+    return null;
+  }
+  if (value === 'filling') {
+    const data = response[response.length - 1];
+    items = [...data.posts].reverse(); // (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+
+    console.log(data); 
     const postsContainer = document.querySelector('.posts');
-    // const feedsContainer = document.querySelector('.feeds');
-    if (!postsContainer.hasChildNodes()) {
 
+    if (!postsContainer.hasChildNodes()) {
       const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
-      // const divFeeds = createAndAppendElement(feedsContainer, 'div', ['card', 'border-0']);
       const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
-      // const divCard = createAndAppendElement(divFeeds, 'div', ['card-body']);
-      // const ulFeeds = createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
       createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
-      // createAndAppendElement(divCard, 'h2', ['card-title', 'h4'], i18n('items.feeds'));
       createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
-      // createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
-      // const { mainTitle, mainDescription } = data;
-      // const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-      // createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-      // createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
     } else {
-      // const { mainTitle } = data;
-      // const { mainDescription } = data;
-      // const ulFeeds = document.querySelector('.feeds > .card > .list-group');
-      // const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-      // createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-      // createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
+      // items = response;
+      const { mainTitle } = data;
+      const { mainDescription } = data;
+      const ulFeeds = document.querySelector('.feeds > .card > .list-group');
+      const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
+      createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
+      createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
     }
+
+  }
+  if (value === 'update') {
+    items = response[response.length - 1].reverse();
+  }
   const ulPost = document.querySelector('.posts > .card > .list-group');
   items.forEach((item) => {
     const { title, href, id } = item;
@@ -70,13 +66,13 @@ export const createContainerPosts = (response, i18n) => {
       'href': href,
       'data-id': id,
       'target': '_blank',
-      'rel': 'noopener noreferrer'
+      'rel': 'noopener noreferrer',
     });
     const button = createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
       'type': 'button',
       'data-id': id,
       'data-bs-toggle': 'modal',
-      'data-bs-target': '#modal'
+      'data-bs-target': '#modal',
     });
     ulPost.prepend(li);
     return null;
@@ -84,70 +80,28 @@ export const createContainerPosts = (response, i18n) => {
   return null;
 };
 
-
-export const createContainerFeeds= (response, i18n, value) => { //update
-  console.log('createContainerFeeds')
-  // let items;
-  // if (value === 'loading') {
-  //   renderLoading();
-  //   return null;
-  // }
-  // if (value === 'filling') {
-  //   const data = response[response.length - 1];
-  //   items = data.posts.reverse();
-  //   const postsContainer = document.querySelector('.posts');
-  //   const feedsContainer = document.querySelector('.feeds');
-  //   if (!postsContainer.hasChildNodes()) {
-  //     const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
-  //     const divFeeds = createAndAppendElement(feedsContainer, 'div', ['card', 'border-0']);
-  //     const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
-  //     const divCard = createAndAppendElement(divFeeds, 'div', ['card-body']);
-  //     const ulFeeds = createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
-  //     createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
-  //     createAndAppendElement(divCard, 'h2', ['card-title', 'h4'], i18n('items.feeds'));
-  //     createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
-  //     createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
-  //     const { mainTitle } = data;
-  //     const { mainDescription } = data;
-  //     const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-  //     createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-  //     createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
-  //   } else {
-  //     const { mainTitle } = data;
-  //     const { mainDescription } = data;
-  //     const ulFeeds = document.querySelector('.feeds > .card > .list-group');
-  //     const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-  //     createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-  //     createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
-  //   }
-  // }
-  // if (value === 'update') {
-  //   items = response[response.length - 1].reverse();
-  // }
-  // const ulPost = document.querySelector('.posts > .card > .list-group');
-  // items.forEach((item) => {
-  //   const { title } = item;
-  //   const { href } = item;
-  //   const { id } = item;
-  //   const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
-  //   const a = createAndAppendElement(li, 'a', ['fw-bold'], title);
-  //   a.setAttribute('href', href);
-  //   a.setAttribute('data-id', id);
-  //   a.setAttribute('target', '_blank');
-  //   a.setAttribute('rel', 'noopener noreferrer');
-  //   const button = createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'));
-  //   button.setAttribute('type', 'button');
-  //   button.setAttribute('data-id', id);
-  //   button.setAttribute('data-bs-toggle', 'modal');
-  //   button.setAttribute('data-bs-target', '#modal');
-  //   ulPost.prepend(li);
-  //   return null;
-  // });
-  // return null;
+export const createContainerFeeds = (response, i18n) => {
+  const data = response[response.length - 1];
+  const { mainTitle, mainDescription } = data;
+  const feedsContainer = document.querySelector('.feeds');
+  if (!feedsContainer.hasChildNodes()) {
+    const divFeeds = createAndAppendElement(feedsContainer, 'div', ['card', 'border-0']);
+    const divCard = createAndAppendElement(divFeeds, 'div', ['card-body']);
+    const ulFeeds = createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
+    createAndAppendElement(divCard, 'h2', ['card-title', 'h4'], i18n('items.feeds'));
+    createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
+    const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
+    createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
+    createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
+  } else {
+    const ulFeeds = document.querySelector('.feeds > .card > .list-group');
+    const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
+    createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
+    createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
+  }
 };
 
-
-export const renderFilling = (state, i18n) => {
+export const renderFilling = (state, i18n, value) => {
   const feedback = document.querySelector('.feedback');
   const inputText = document.querySelector('#url-input');
   const sendButton = document.querySelector('[type="submit"]');
@@ -160,10 +114,7 @@ export const renderFilling = (state, i18n) => {
   }
   feedback.classList.add('text-success');
   feedback.textContent = i18n('feedback.success');
-  // createContainerPost(state.content, i18n, value);
-  // createContainerPosts(state.posts, i18n); // feeds
-  // createContainerPosts(state.posts, i18n);
-  // createContainerFeeds
+  createContainerPosts(state.posts, i18n, value);
   inputText.value = '';
   inputText.focus();
   sendButton.removeAttribute('disabled');

@@ -1,5 +1,5 @@
 const builtUpdate = (data, bigData) => {
-  console.log(data);
+  // const mainData = bigData.filter((elem) => elem.mainTitle === data.mainTitle)[0];
   const mainData = bigData.find((elem) => elem.mainTitle === data.mainTitle);
   const diffData = [];
   data.posts.forEach((dataItem) => {
@@ -7,7 +7,7 @@ const builtUpdate = (data, bigData) => {
     if (duplicate.length === 0) {
       diffData.push(dataItem);
     }
-    return null;
+    // return null;
   });
   return diffData;
 };

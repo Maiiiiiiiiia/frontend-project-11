@@ -1,13 +1,11 @@
 import uniqueId from 'lodash/uniqueId';
 
 const parser = (response, i18n) => {
-  console.log(response);
-
   const pars = new DOMParser();
   const doc = pars.parseFromString(response.data.contents, 'text/xml');
-  // if (!doc.querySelector('rss')) {
-  //   throw new Error(i18n('feedback.invalidRss'));
-  // }
+  if (!doc.querySelector('rss')) {
+    throw new Error(i18n('feedback.invalidRss'));
+  }
   const items = doc.querySelectorAll('item');
   const mainTitle = doc.querySelector('channel > title').textContent;
   const mainDescription = doc.querySelector('channel > description').textContent;
@@ -21,8 +19,6 @@ const parser = (response, i18n) => {
       title, description, href, id,
     });
   });
-  console.log(data);
-
   return data;
 };
 export default parser;
