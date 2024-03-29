@@ -32,22 +32,6 @@ const app = () => {
     debug: false,
     resources,
   }).then(() => {
-    const checkNewPost = (newState) => {
-      const promises = newState.validLinks.map((link) => axios.get(`${allOriginsUrl}${encodeURIComponent(link)}`)
-        .then((response) => {
-          const data = parser(response);
-          const difference = builtUpdate(data, newState.posts);
-          if (difference.length !== 0) {
-            watchedState.posts.push(difference);
-          }
-        })
-        .catch(() => {}));
-      return Promise.all(promises)
-        .then(() => {
-          setTimeout(() => checkNewPost(newState), 5000);
-        });
-    };
-
     const watchedState = onChange(state, (path, value) => {
       switch (path) {
         case 'form.formState': {
@@ -57,8 +41,6 @@ const app = () => {
             renderFilling(state, i18nInstance.t, state.form.formState);
           } else if (value === 'error') {
             renderError(state.errorMessage, i18nInstance.t);
-          } else if (value === 'update') {
-            checkNewPost(state);
           }
           break;
         }
@@ -75,6 +57,23 @@ const app = () => {
           break;
       }
     });
+
+    const checkNewPost = (newState) => {
+      const promises = newState.validLinks.map((link) => axios.get(`${allOriginsUrl}${encodeURIComponent(link)}`)
+        .then((response) => {
+          const data = parser(response);
+          const difference = builtUpdate(data, newState.posts);
+          if (difference.length !== 0) {
+            watchedState.posts.push(difference);
+          }
+        })
+        .catch(() => {}));
+      return Promise.all(promises)
+        .then(() => {
+          setTimeout(() => checkNewPost(newState), 5000);
+        });
+    };
+    checkNewPost(state);
 
     Yup.setLocale({
       mixed: {

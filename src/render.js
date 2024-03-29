@@ -137,7 +137,6 @@ export const renderClick = (state) => {
   });
   const response = state.posts;
   const data = response[response.length - 1];
-  // const items = data.posts.reverse();
   const items = [...data.posts].reverse();
 
   items.forEach((item) => {
