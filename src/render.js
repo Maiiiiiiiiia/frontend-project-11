@@ -23,59 +23,123 @@ export const renderLoading = () => {
   feedback.textContent = '';
 };
 
-export const createContainerPosts = (response, i18n, value) => {
-  let items;
-  if (value === 'loading') {
-    renderLoading();
-    return null;
-  }
-  if (value === 'filling') {
-    const data = response[response.length - 1];
-    items = [...data.posts].reverse();
+export const createContainerPosts = (posts, i18n) => {
+  // console.log(posts);
+  // let items;
+  // if (value === 'loading') {
+  //   renderLoading();
+  //   return null;
+  // }
+  // if (value === 'filling') {
+    const data = posts[posts.length - 1]; ////////
+    // const items = [...data.posts].reverse();
+    const items = [...data].reverse();
+
     const postsContainer = document.querySelector('.posts');
-    if (!postsContainer.hasChildNodes()) {
+  //   if (!postsContainer.hasChildNodes()) {
       const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
       const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
       createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
       createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
-    } else {
-      // items = response;
-      const { mainTitle } = data;
-      const { mainDescription } = data;
-      const ulFeeds = document.querySelector('.feeds > .card > .list-group');
-      const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-      createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-      createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
+  //   } else {
+    const ulPost = document.querySelector('.posts > .card > .list-group');
+    const postsTitle = document.querySelector('.card-title');
+    if (postsTitle) {
+      ulPost.innerHTML = '';
     }
-  }
-  if (value === 'update') {
-    items = response[response.length - 1].reverse();
-  }
-  const ulPost = document.querySelector('.posts > .card > .list-group');
-  items.forEach((item) => {
-    const { title, href, id } = item;
-    const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
-    createAndAppendElement(li, 'a', ['fw-bold'], title, {
-      href,
-      'data-id': id,
-      target: '_blank',
-      rel: 'noopener noreferrer',
+// вместо этого куска здесь будет просто очищение контейнера через innerHTML = '' и создание списка заново. 
+// Можно очищать не весь контейнер, а только список - тогда нужно будет оставить проверку на существование заголовка, чтобы его не задублировать
+
+  //     const { mainTitle } = data;
+  //     const { mainDescription } = data;
+  //     const ulFeeds = document.querySelector('.feeds > .card > .list-group');
+  //     const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
+  //     createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
+  //     createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
+  //   }
+  // }
+  // if (value === 'update') {
+  //   items = posts[posts.length - 1].reverse(); ///////////
+  // }
+  // const ulPost = document.querySelector('.posts > .card > .list-group');
+    items.forEach((item) => {
+      const { title, href, id } = item;
+      const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
+      createAndAppendElement(li, 'a', ['fw-bold'], title, {
+        href,
+        'data-id': id,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      });
+      createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
+        type: 'button',
+        'data-id': id,
+        'data-bs-toggle': 'modal',
+        'data-bs-target': '#modal',
+      });
+      ulPost.prepend(li);
+      return null;
     });
-    createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
-      type: 'button',
-      'data-id': id,
-      'data-bs-toggle': 'modal',
-      'data-bs-target': '#modal',
-    });
-    ulPost.prepend(li);
-    return null;
-  });
   return null;
 };
 
-export const createContainerFeeds = (response, i18n) => {
-  const data = response[response.length - 1];
-  const { mainTitle, mainDescription } = data;
+// export const createContainerPosts = (posts, i18n, value) => {
+//   let items;
+//   if (value === 'loading') {
+//     renderLoading();
+//     return null;
+//   }
+//   if (value === 'filling') {
+//     const data = posts[posts.length - 1]; ////////
+//     items = [...data.posts].reverse();
+//     const postsContainer = document.querySelector('.posts');
+//     if (!postsContainer.hasChildNodes()) {
+//       const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
+//       const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
+//       createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
+//       createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
+//     } else {
+//       const { mainTitle } = data;
+//       const { mainDescription } = data;
+//       const ulFeeds = document.querySelector('.feeds > .card > .list-group');
+//       const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
+//       createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
+//       createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
+//     }
+//   }
+//   if (value === 'update') {
+//     items = posts[posts.length - 1].reverse(); ///////////
+//   }
+//   const ulPost = document.querySelector('.posts > .card > .list-group');
+//   items.forEach((item) => {
+//     const { title, href, id } = item;
+//     const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
+//     createAndAppendElement(li, 'a', ['fw-bold'], title, {
+//       href,
+//       'data-id': id,
+//       target: '_blank',
+//       rel: 'noopener noreferrer',
+//     });
+//     createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
+//       type: 'button',
+//       'data-id': id,
+//       'data-bs-toggle': 'modal',
+//       'data-bs-target': '#modal',
+//     });
+//     ulPost.prepend(li);
+//     return null;
+//   });
+//   return null;
+// };
+
+
+
+// export const createContainerFeeds = (response, i18n) => {
+  export const createContainerFeeds = (mainTitle, mainDescription , i18n) => {
+
+  // const data = response[response.length - 1];
+  // const { mainTitle, mainDescription } = data;
+  // console.log(data);
   const feedsContainer = document.querySelector('.feeds');
   if (!feedsContainer.hasChildNodes()) {
     const divFeeds = createAndAppendElement(feedsContainer, 'div', ['card', 'border-0']);
@@ -94,7 +158,7 @@ export const createContainerFeeds = (response, i18n) => {
   }
 };
 
-export const renderFilling = (state, i18n, value) => {
+export const renderFilling = (state, i18n) => {
   const feedback = document.querySelector('.feedback');
   const inputText = document.querySelector('#url-input');
   const sendButton = document.querySelector('[type="submit"]');
@@ -107,7 +171,7 @@ export const renderFilling = (state, i18n, value) => {
   }
   feedback.classList.add('text-success');
   feedback.textContent = i18n('feedback.success');
-  createContainerPosts(state.posts, i18n, value);
+  // createContainerPosts(state.posts, i18n);
   inputText.value = '';
   inputText.focus();
   sendButton.removeAttribute('disabled');
@@ -135,14 +199,14 @@ export const renderClick = (state) => {
     postElement.classList.add('fw-normal', 'link-secondary');
     postElement.classList.remove('fw-bold');
   });
-  const response = state.posts;
-  const data = response[response.length - 1];
-  const items = [...data.posts].reverse();
 
-  items.forEach((item) => {
-    const { title, href, description } = item;
+  const activeItemId = state.activeItemId;
+  const activeItem = state.posts.find(item => item.id === activeItemId);
+
+  if (activeItem) {
+    const { title, href, description } = activeItem;
     document.querySelector('.modal-header > h5').textContent = title;
     document.querySelector('.modal-content > .modal-body').textContent = description;
     document.querySelector('.modal-footer > a').setAttribute('href', href);
-  });
+  }
 };

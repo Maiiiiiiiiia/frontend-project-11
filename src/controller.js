@@ -19,9 +19,9 @@ const app = () => {
     validLinks: [],
     feeds: [],
     posts: [],
-    difference: [],
     errorMessage: '',
     clickedLinks: [],
+    activeItemId: '',
   };
 
   const allOriginsUrl = 'https://allorigins.hexlet.app/get?disableCache=true&url=';
@@ -38,14 +38,15 @@ const app = () => {
           if (value === 'loading') {
             renderLoading();
           } else if (value === 'filling') {
-            renderFilling(state, i18nInstance.t, state.form.formState);
+            renderFilling(state, i18nInstance.t);
           } else if (value === 'error') {
             renderError(state.errorMessage, i18nInstance.t);
           }
           break;
         }
         case 'posts':
-          createContainerPosts(value, i18nInstance.t, state.form.formState);
+          createContainerPosts(value, i18nInstance.t);
+
           break;
         case 'feeds':
           createContainerFeeds(value, i18nInstance.t);
@@ -59,12 +60,18 @@ const app = () => {
     });
 
     const checkNewPost = (newState) => {
+      console.log('check new posts')
       const promises = newState.validLinks.map((link) => axios.get(`${allOriginsUrl}${encodeURIComponent(link)}`)
         .then((response) => {
-          const data = parser(response);
+          const data = parser(response, i18nInstance.t);
           const difference = builtUpdate(data, newState.posts);
+          console.log(difference);
           if (difference.length !== 0) {
-            watchedState.posts.push(difference);
+            // difference.forEach((post) => {
+            //   watchedState.posts.push(post);
+            // });
+            watchedState.posts.push(...difference);
+
           }
         })
         .catch(() => {}));
@@ -73,7 +80,6 @@ const app = () => {
           setTimeout(() => checkNewPost(newState), 5000);
         });
     };
-    checkNewPost(state);
 
     Yup.setLocale({
       mixed: {
@@ -98,8 +104,29 @@ const app = () => {
         .then(() => axios.get(`${allOriginsUrl}${encodeURIComponent(url)}`))
         .then((response) => {
           const data = parser(response, i18nInstance.t);
-          watchedState.feeds.push(data);
-          watchedState.posts.push(data);
+          const { mainDescription , mainTitle, posts } = data;
+          const feed = [mainDescription, mainTitle]
+          watchedState.feeds.push(feed);
+
+
+          // watchedState.feeds.push(data); // ну хорошо же работалоооо
+          // watchedState.posts.push(data);
+          watchedState.posts.push(data.posts);
+// const { mainDescription , mainTitle, posts } = data;
+// console.log(mainDescription);
+// console.log(mainTitle);
+
+          // console.log(data) =
+          // {mainTitle: 'Lorem ipsum feed for an interval of 1 seconds with 10 item(s)', mainDescription: 'This is a constantly updating lorem ipsum feed', posts: Array(10)}
+          // mainDescription: "This is a constantly updating lorem ipsum feed"
+          // mainTitle: "Lorem ipsum feed for an interval of 1 seconds with 10 item(s)"
+          // posts: (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+
+
+// в фиды нужно запушить только фид, а в посты - каждый пост, у вас должны быть массивы с элементами, например 
+// feeds = [{объект с отдельным фидом}, {объект с отдельным фидом}];
+// posts = [{объект с отдельным постом}, {объект с отдельным постом}]
+
 
           watchedState.form.formState = 'filling';
         })
@@ -108,6 +135,7 @@ const app = () => {
           watchedState.form.formState = 'update';
         })
         .catch((err) => {
+          console.log(err);
           if (err.message === 'Network Error') {
             watchedState.errorMessage = i18nInstance.t('feedback.axiosError');
           } else {
@@ -116,14 +144,27 @@ const app = () => {
           watchedState.form.formState = 'error';
         });
     });
+    checkNewPost(state);
+
+    // const postsContainer = document.querySelector('.posts');
+    // postsContainer.addEventListener('click', (e) => {
+    //   if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+    //     const targetID = e.target.getAttribute('data-id');
+    //     watchedState.clickedLinks.push(targetID);
+    //   }
+    // });
 
     const postsContainer = document.querySelector('.posts');
     postsContainer.addEventListener('click', (e) => {
       if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
         const targetID = e.target.getAttribute('data-id');
         watchedState.clickedLinks.push(targetID);
-      }
-    });
+        watchedState.activeItemId = targetID;
+    
+    // renderClick(watchedState);
+  }
+});
+
   });
 };
 export default app;
