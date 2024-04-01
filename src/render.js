@@ -23,41 +23,36 @@ export const renderLoading = () => {
   feedback.textContent = '';
 };
 
-export const createContainerPosts = (posts, i18n) => {
+export const createContainerPosts = (state, posts, i18n) => {
   const items = [...posts].reverse();
   const postsContainer = document.querySelector('.posts');
   postsContainer.innerHTML = '';
 
-    const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
-    const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
-    createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
-    createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
+  const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
+  const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
+  createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
+  createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
 
-    const ulPost = document.querySelector('.posts > .card > .list-group');
-    items.forEach((item) => {
-      const { title, href, id } = item;
-      const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
-
-      // перерисовываем, но если кликнута ?
-      // fw-normal link-secondary
-      const linkClass = window.location.href === href ? 'fw-normal link-secondary' : 'fw-bold';
-
-      createAndAppendElement(li, 'a', [linkClass], title, {
-        href,
-        'data-id': id,
-        target: '_blank',
-        rel: 'noopener noreferrer',
-      });
-      createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
-        type: 'button',
-        'data-id': id,
-        'data-bs-toggle': 'modal',
-        'data-bs-target': '#modal',
-      });
-      ulPost.prepend(li);
-  // return null;
-});
-return null;
+  const ulPost = document.querySelector('.posts > .card > .list-group');
+  items.forEach((item) => {
+    const { title, href, id } = item;
+    const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
+    const linkClasses = state.clickedLinks.includes(id) ? ['fw-normal', 'link-secondary'] : ['fw-bold'];
+    createAndAppendElement(li, 'a', linkClasses, title, {
+      href,
+      'data-id': id,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    });
+    createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
+      type: 'button',
+      'data-id': id,
+      'data-bs-toggle': 'modal',
+      'data-bs-target': '#modal',
+    });
+    ulPost.prepend(li);
+  });
+  return null;
 };
 
 export const createContainerFeeds = (feeds, i18n) => {
@@ -74,13 +69,11 @@ export const createContainerFeeds = (feeds, i18n) => {
   } else {
     ulFeeds = document.querySelector('.feeds > .card > .list-group');
   }
-  
   const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
   createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
   createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
   ulFeeds.insertBefore(li, ulFeeds.firstChild);
 };
-
 
 export const renderFilling = (i18n) => {
   const feedback = document.querySelector('.feedback');
@@ -122,9 +115,8 @@ export const renderClick = (state) => {
     postElement.classList.add('fw-normal', 'link-secondary');
     postElement.classList.remove('fw-bold');
   });
-
-  const activeItemId = state.activeItemId;
-  const activeItem = state.posts.find(item => item.id === activeItemId);
+  const { activeItemId } = state;
+  const activeItem = state.posts.find((item) => item.id === activeItemId);
 
   if (activeItem) {
     const { title, href, description } = activeItem;

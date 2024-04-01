@@ -45,8 +45,7 @@ const app = () => {
           break;
         }
         case 'posts':
-          // console.log(value);
-          createContainerPosts(value, i18nInstance.t);
+          createContainerPosts(state, value, i18nInstance.t);
           break;
         case 'feeds':
           createContainerFeeds(value, i18nInstance.t);
@@ -60,7 +59,6 @@ const app = () => {
     });
 
     const checkNewPost = (newState) => {
-
       const promises = newState.validLinks.map((link) => axios.get(`${allOriginsUrl}${encodeURIComponent(link)}`)
         .then((response) => {
           const data = parser(response, i18nInstance.t);
@@ -99,11 +97,11 @@ const app = () => {
         .then(() => axios.get(`${allOriginsUrl}${encodeURIComponent(url)}`))
         .then((response) => {
           const data = parser(response, i18nInstance.t);
-          const { mainDescription , mainTitle, posts } = data;
+          const { mainDescription, mainTitle, posts } = data;
           const feeds = { mainTitle, mainDescription };
           posts.forEach((post) => {
-            watchedState.posts.push(post)
-          })
+            watchedState.posts.push(post);
+          });
           watchedState.feeds.unshift(feeds);
           watchedState.form.formState = 'filling';
         })
@@ -112,7 +110,6 @@ const app = () => {
           watchedState.form.formState = 'update';
         })
         .catch((err) => {
-          console.log(err);
           if (err.message === 'Network Error') {
             watchedState.errorMessage = i18nInstance.t('feedback.axiosError');
           } else {
@@ -123,25 +120,15 @@ const app = () => {
     });
     checkNewPost(state);
 
-    // const postsContainer = document.querySelector('.posts');
-    // postsContainer.addEventListener('click', (e) => {
-    //   if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
-    //     const targetID = e.target.getAttribute('data-id');
-    //     watchedState.clickedLinks.push(targetID);
-    //   }
-    // });
-
     const postsContainer = document.querySelector('.posts');
     postsContainer.addEventListener('click', (e) => {
       if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
         const targetID = e.target.getAttribute('data-id');
         watchedState.clickedLinks.push(targetID);
         watchedState.activeItemId = targetID;
-    
-    // renderClick(watchedState);
-  }
-});
-
+        renderClick(watchedState);
+      }
+    });
   });
 };
 export default app;
