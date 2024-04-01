@@ -99,9 +99,7 @@ const app = () => {
           const data = parser(response, i18nInstance.t);
           const { mainDescription, mainTitle, posts } = data;
           const feeds = { mainTitle, mainDescription };
-          posts.forEach((post) => {
-            watchedState.posts.push(post);
-          });
+          watchedState.posts.push(...posts);
           watchedState.feeds.unshift(feeds);
           watchedState.form.formState = 'filling';
         })
