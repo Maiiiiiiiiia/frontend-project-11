@@ -24,48 +24,25 @@ export const renderLoading = () => {
 };
 
 export const createContainerPosts = (posts, i18n) => {
-  // console.log(posts);
-  // let items;
-  // if (value === 'loading') {
-  //   renderLoading();
-  //   return null;
-  // }
-  // if (value === 'filling') {
-    const data = posts[posts.length - 1]; ////////
-    // const items = [...data.posts].reverse();
-    const items = [...data].reverse();
+  const items = [...posts].reverse();
+  const postsContainer = document.querySelector('.posts');
+  postsContainer.innerHTML = '';
 
-    const postsContainer = document.querySelector('.posts');
-  //   if (!postsContainer.hasChildNodes()) {
-      const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
-      const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
-      createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
-      createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
-  //   } else {
+    const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
+    const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
+    createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
+    createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
+
     const ulPost = document.querySelector('.posts > .card > .list-group');
-    const postsTitle = document.querySelector('.card-title');
-    if (postsTitle) {
-      ulPost.innerHTML = '';
-    }
-// вместо этого куска здесь будет просто очищение контейнера через innerHTML = '' и создание списка заново. 
-// Можно очищать не весь контейнер, а только список - тогда нужно будет оставить проверку на существование заголовка, чтобы его не задублировать
-
-  //     const { mainTitle } = data;
-  //     const { mainDescription } = data;
-  //     const ulFeeds = document.querySelector('.feeds > .card > .list-group');
-  //     const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-  //     createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-  //     createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
-  //   }
-  // }
-  // if (value === 'update') {
-  //   items = posts[posts.length - 1].reverse(); ///////////
-  // }
-  // const ulPost = document.querySelector('.posts > .card > .list-group');
     items.forEach((item) => {
       const { title, href, id } = item;
       const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
-      createAndAppendElement(li, 'a', ['fw-bold'], title, {
+
+      // перерисовываем, но если кликнута ?
+      // fw-normal link-secondary
+      const linkClass = window.location.href === href ? 'fw-normal link-secondary' : 'fw-bold';
+
+      createAndAppendElement(li, 'a', [linkClass], title, {
         href,
         'data-id': id,
         target: '_blank',
@@ -78,87 +55,34 @@ export const createContainerPosts = (posts, i18n) => {
         'data-bs-target': '#modal',
       });
       ulPost.prepend(li);
-      return null;
-    });
-  return null;
+  // return null;
+});
+return null;
 };
 
-// export const createContainerPosts = (posts, i18n, value) => {
-//   let items;
-//   if (value === 'loading') {
-//     renderLoading();
-//     return null;
-//   }
-//   if (value === 'filling') {
-//     const data = posts[posts.length - 1]; ////////
-//     items = [...data.posts].reverse();
-//     const postsContainer = document.querySelector('.posts');
-//     if (!postsContainer.hasChildNodes()) {
-//       const divCardBorder = createAndAppendElement(postsContainer, 'div', ['card', 'border-0']);
-//       const divCardBody = createAndAppendElement(divCardBorder, 'div', ['card-body']);
-//       createAndAppendElement(divCardBody, 'h2', ['card-title', 'h4'], i18n('items.posts'));
-//       createAndAppendElement(divCardBorder, 'ul', ['list-group', 'border-0', 'rounded-0']);
-//     } else {
-//       const { mainTitle } = data;
-//       const { mainDescription } = data;
-//       const ulFeeds = document.querySelector('.feeds > .card > .list-group');
-//       const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-//       createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-//       createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
-//     }
-//   }
-//   if (value === 'update') {
-//     items = posts[posts.length - 1].reverse(); ///////////
-//   }
-//   const ulPost = document.querySelector('.posts > .card > .list-group');
-//   items.forEach((item) => {
-//     const { title, href, id } = item;
-//     const li = createAndAppendElement(ulPost, 'li', ['list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0']);
-//     createAndAppendElement(li, 'a', ['fw-bold'], title, {
-//       href,
-//       'data-id': id,
-//       target: '_blank',
-//       rel: 'noopener noreferrer',
-//     });
-//     createAndAppendElement(li, 'button', ['btn', 'btn-outline-primary', 'btn-sm'], i18n('buttons.view'), {
-//       type: 'button',
-//       'data-id': id,
-//       'data-bs-toggle': 'modal',
-//       'data-bs-target': '#modal',
-//     });
-//     ulPost.prepend(li);
-//     return null;
-//   });
-//   return null;
-// };
-
-
-
-// export const createContainerFeeds = (response, i18n) => {
-  export const createContainerFeeds = (mainTitle, mainDescription , i18n) => {
-
-  // const data = response[response.length - 1];
-  // const { mainTitle, mainDescription } = data;
-  // console.log(data);
+export const createContainerFeeds = (feeds, i18n) => {
+  const feed = feeds[0];
+  const { mainTitle, mainDescription } = feed;
   const feedsContainer = document.querySelector('.feeds');
+  let ulFeeds;
+
   if (!feedsContainer.hasChildNodes()) {
     const divFeeds = createAndAppendElement(feedsContainer, 'div', ['card', 'border-0']);
     const divCard = createAndAppendElement(divFeeds, 'div', ['card-body']);
-    const ulFeeds = createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
+    ulFeeds = createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
     createAndAppendElement(divCard, 'h2', ['card-title', 'h4'], i18n('items.feeds'));
-    createAndAppendElement(divFeeds, 'ul', ['list-group', 'border-0', 'rounded-0']);
-    const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-    createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-    createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
   } else {
-    const ulFeeds = document.querySelector('.feeds > .card > .list-group');
-    const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
-    createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
-    createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
+    ulFeeds = document.querySelector('.feeds > .card > .list-group');
   }
+  
+  const li = createAndAppendElement(ulFeeds, 'li', ['list-group-item', 'border-0', 'border-end-0']);
+  createAndAppendElement(li, 'h3', ['h6', 'm-0'], mainTitle);
+  createAndAppendElement(li, 'p', ['m-0', 'small', 'text-black-50'], mainDescription);
+  ulFeeds.insertBefore(li, ulFeeds.firstChild);
 };
 
-export const renderFilling = (state, i18n) => {
+
+export const renderFilling = (i18n) => {
   const feedback = document.querySelector('.feedback');
   const inputText = document.querySelector('#url-input');
   const sendButton = document.querySelector('[type="submit"]');
@@ -171,7 +95,6 @@ export const renderFilling = (state, i18n) => {
   }
   feedback.classList.add('text-success');
   feedback.textContent = i18n('feedback.success');
-  // createContainerPosts(state.posts, i18n);
   inputText.value = '';
   inputText.focus();
   sendButton.removeAttribute('disabled');

@@ -38,15 +38,15 @@ const app = () => {
           if (value === 'loading') {
             renderLoading();
           } else if (value === 'filling') {
-            renderFilling(state, i18nInstance.t);
+            renderFilling(i18nInstance.t);
           } else if (value === 'error') {
             renderError(state.errorMessage, i18nInstance.t);
           }
           break;
         }
         case 'posts':
+          // console.log(value);
           createContainerPosts(value, i18nInstance.t);
-
           break;
         case 'feeds':
           createContainerFeeds(value, i18nInstance.t);
@@ -60,18 +60,13 @@ const app = () => {
     });
 
     const checkNewPost = (newState) => {
-      console.log('check new posts')
+
       const promises = newState.validLinks.map((link) => axios.get(`${allOriginsUrl}${encodeURIComponent(link)}`)
         .then((response) => {
           const data = parser(response, i18nInstance.t);
           const difference = builtUpdate(data, newState.posts);
-          console.log(difference);
           if (difference.length !== 0) {
-            // difference.forEach((post) => {
-            //   watchedState.posts.push(post);
-            // });
-            watchedState.posts.push(...difference);
-
+            watchedState.posts.unshift(...difference);
           }
         })
         .catch(() => {}));
@@ -105,29 +100,11 @@ const app = () => {
         .then((response) => {
           const data = parser(response, i18nInstance.t);
           const { mainDescription , mainTitle, posts } = data;
-          const feed = [mainDescription, mainTitle]
-          watchedState.feeds.push(feed);
-
-
-          // watchedState.feeds.push(data); // ну хорошо же работалоооо
-          // watchedState.posts.push(data);
-          watchedState.posts.push(data.posts);
-// const { mainDescription , mainTitle, posts } = data;
-// console.log(mainDescription);
-// console.log(mainTitle);
-
-          // console.log(data) =
-          // {mainTitle: 'Lorem ipsum feed for an interval of 1 seconds with 10 item(s)', mainDescription: 'This is a constantly updating lorem ipsum feed', posts: Array(10)}
-          // mainDescription: "This is a constantly updating lorem ipsum feed"
-          // mainTitle: "Lorem ipsum feed for an interval of 1 seconds with 10 item(s)"
-          // posts: (10) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
-
-
-// в фиды нужно запушить только фид, а в посты - каждый пост, у вас должны быть массивы с элементами, например 
-// feeds = [{объект с отдельным фидом}, {объект с отдельным фидом}];
-// posts = [{объект с отдельным постом}, {объект с отдельным постом}]
-
-
+          const feeds = { mainTitle, mainDescription };
+          posts.forEach((post) => {
+            watchedState.posts.push(post)
+          })
+          watchedState.feeds.unshift(feeds);
           watchedState.form.formState = 'filling';
         })
         .then(() => {
